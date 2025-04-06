@@ -1,5 +1,6 @@
 package com.hiru.salon.user.controller;
 
+import com.hiru.salon.user.exception.UserException;
 import com.hiru.salon.user.modal.User;
 import com.hiru.salon.user.repository.UserRepository;
 import jakarta.validation.Valid;
@@ -30,7 +31,7 @@ public class UserController {
         if (otp.isPresent()) {
             return otp.get();
         }
-        throw new Exception("User not found");
+        throw new UserException("User not found");
     }
 
     @PutMapping("/users/{id}")
@@ -38,7 +39,7 @@ public class UserController {
                            @PathVariable Long id) throws Exception {
         Optional<User> otp = userRepository.findById(id);
         if (otp.isEmpty()) {
-            throw new Exception("User not found with id: " + id);
+            throw new UserException("User not found with id: " + id);
         }
         User existingUser = otp.get();
         existingUser.setUserName(user.getUserName());
@@ -54,7 +55,7 @@ public class UserController {
     public String deleteUserById(@PathVariable Long id) throws Exception {
         Optional<User> otp = userRepository.findById(id);
         if (otp.isEmpty()) {
-            throw new Exception("User not found with id: " + id);
+            throw new UserException("User not found with id: " + id);
         }
         userRepository.deleteById(otp.get().getId());
         return "User deleted successfully";

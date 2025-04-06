@@ -41,6 +41,7 @@ public class UserController {
             throw new Exception("User not found with id: " + id);
         }
         User existingUser = otp.get();
+        existingUser.setUserName(user.getUserName());
         existingUser.setFullName(user.getFullName());
         existingUser.setEmail(user.getEmail());
         existingUser.setPhoneNumber(user.getPhoneNumber());

@@ -1,18 +1,60 @@
 package com.hiru.salon.user.controller;
 
 import com.hiru.salon.user.modal.User;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.hiru.salon.user.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class UserController {
+    @Autowired
+    private UserRepository userRepository;
+
+    @PostMapping("/users")
+    public User createUser(@RequestBody User user) {
+        return userRepository.save(user);
+    }
+
     @GetMapping("/users")
-    public User getUser() {
-        User user = new User();
-        user.setFullName("Hirumitha Kuladewa");
-        user.setEmail("hirumithakuladewanew@gmail.com");
-        user.setPhoneNumber("+94 72 550 8919");
-        user.setRole("Customer");
-        return user;
+    public List<User> getUsers() {
+        return userRepository.findAll();
+    }
+
+    @GetMapping("/users/{userId}")
+    public User getUserById(@PathVariable("userId") Long id) throws Exception {
+        Optional<User> otp = userRepository.findById(id);
+        if (otp.isPresent()) {
+            return otp.get();
+        }
+        throw new Exception("User not found");
+    }
+
+    @PutMapping("/users/{id}")
+    public User updateUser(@RequestBody User user,
+                           @PathVariable Long id) throws Exception {
+        Optional<User> otp = userRepository.findById(id);
+        if (otp.isEmpty()) {
+            throw new Exception("User not found with id: " + id);
+        }
+        User existingUser = otp.get();
+        existingUser.setFullName(user.getFullName());
+        existingUser.setEmail(user.getEmail());
+        existingUser.setPhoneNumber(user.getPhoneNumber());
+        existingUser.setRole(user.getRole());
+
+        return userRepository.save(existingUser);
+    }
+
+    @DeleteMapping("/users/{id}")
+    public String deleteUserById(@PathVariable Long id) throws Exception {
+        Optional<User> otp = userRepository.findById(id);
+        if (otp.isEmpty()) {
+            throw new Exception("User not found with id: " + id);
+        }
+        userRepository.deleteById(otp.get().getId());
+        return "User deleted successfully";
     }
 }

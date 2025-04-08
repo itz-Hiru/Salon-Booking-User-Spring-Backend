@@ -90,7 +90,7 @@ You can test APIs using:
 
 ## 📬 Contact
 
-📧 Email: your.email@example.com  
+📧 Email: hirumithakuladewanew@gmail.com  
 🌐 GitHub: [itz-Hiru](https://github.com/itz-Hiru)
 
 ---
